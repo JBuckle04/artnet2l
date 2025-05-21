@@ -4,23 +4,23 @@ public class Smoother {
     private double currentValue = 0;
     private final double attackRate;
     private final double decayRate;
-    private final int maxDMXValue;
 
-    public Smoother(double attackRate, double decayRate, int maxDMXValue) {
+    public Smoother(double attackRate, double decayRate) {
         this.attackRate = attackRate;
         this.decayRate = decayRate;
-        this.maxDMXValue = maxDMXValue;
     }
 
-    public int updateAndScale(double target) {
-
+    public double apply(double target) {
+        
         if (target > currentValue) {
             currentValue += (target - currentValue) * attackRate;
         } else {
             currentValue += (target - currentValue) * decayRate;
         }
 
-        // Scale to 0 - maxDMXValue
-        return (int)(currentValue * maxDMXValue);
+        // Clamp currentValue between 0 and 1 to avoid drift
+        currentValue = Math.min(1.0, Math.max(0.0, currentValue));
+
+        return currentValue;
     }
 }

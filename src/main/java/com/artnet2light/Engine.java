@@ -1,10 +1,14 @@
 package com.artnet2light;
 
-import javax.sound.midi.SysexMessage;
 
 public class Engine {
     ArtNetSender ArtnetHandler; // Use broadcast or specific IP
     AudioCapture AudioEngine;
+
+    Gain myGain = new Gain(0.00001);
+    Smoother mySmoother = new Smoother(0.1,0.1);
+    Gate myGate = new Gate(0.1);
+
     public static void main(String[] args) throws Exception {
 
         new Engine().start();
@@ -24,8 +28,8 @@ public class Engine {
 
         while (true) {
             double amplitude = AudioEngine.getAmp();
-            int value = this.processSound(amplitude);
-            this.sendLight(value);
+            int output = this.processSound(amplitude);
+            this.sendLight(output);
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {
@@ -47,12 +51,12 @@ public class Engine {
 
     public int processSound(double amplitude)
     {   
-        Smoother mySmoother = new Smoother(0.5,0.05,255);
-        Gate myGate = new Gate(110);
-
-        int value = mySmoother.updateAndScale(amplitude);
+        double value = myGain.apply(amplitude);
+        value = mySmoother.apply(value);
         value = myGate.tryGate(value);
-        System.out.println(value);
-        return value;
+
+        int output = (int) (value * 255);
+        System.out.println(output);
+        return output;
     }
 }

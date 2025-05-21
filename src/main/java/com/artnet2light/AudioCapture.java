@@ -22,7 +22,6 @@ public class AudioCapture {
         while (true) {
             int bytesRead = line.read(buffer, 0, buffer.length);
             amplitude = calculateAmplitude(buffer, bytesRead);
-            amplitude = Math.min(amplitude / 20000.0, 1.0); //TODO automatic gaining/a gain class
             //System.out.println("Amplitude: " + amplitude);
 
             

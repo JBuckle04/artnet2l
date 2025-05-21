@@ -1,14 +1,14 @@
 package com.artnet2light;
 
 public class Gate {
-    private final int threshold;
-    private int previous = 0;
+    private final double threshold;
+    private double previous = 0;
 
-    public Gate(int threshold) {
+    public Gate(double threshold) {
         this.threshold = threshold;
     }
 
-    public int tryGate(int value) {
+    public double tryGate(double value) {
         boolean allow = value >= threshold || value < previous;
         previous = value;
         return allow ? value : 0;
