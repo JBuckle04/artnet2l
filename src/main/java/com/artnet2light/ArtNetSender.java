@@ -1,13 +1,22 @@
 package com.artnet2light;
 
+import java.net.InetAddress;
+import java.net.NetworkInterface;
+
 import ch.bildspur.artnet.*;
 public class ArtNetSender {
     private ArtNetClient artnet;
 
     public ArtNetSender() throws Exception {
 
+        NetworkInterface ni = NetworkInterface.getByName("en0");
+        InetAddress address = ni.getInetAddresses().nextElement();
+
+        
         artnet = new ArtNetClient();
-        artnet.start();
+        artnet.start(address);
+        artnet.getArtNetServer().setBroadcastAddress("127.0.0.1");
+        System.out.println(artnet.getArtNetServer().getIPAddress());
     }
 
     /**
@@ -20,7 +29,8 @@ public class ArtNetSender {
         byte[] dmxData = new byte[512];
         dmxData[channel - 1] = (byte) (value & 0xFF); // DMX channels are 1-based
 
-        artnet.unicastDmx("localhost", subnet, universe, dmxData);
+        artnet.broadcastDmx( subnet, universe, dmxData);
+        //artnet.broadcastDmx(subnet, universe, dmxData);
     }
 
     public void close() {

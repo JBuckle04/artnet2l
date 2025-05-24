@@ -42,7 +42,7 @@ public class Engine {
     public void sendLight(int value)
     {
         try {
-            ArtnetHandler.sendValue(0,0,1,value);
+            ArtnetHandler.sendValue(1,8,267,value);
         } catch (Exception e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
