@@ -30,8 +30,9 @@ public class Engine {
 
         while (true) {
             double amplitude = AudioEngine.getAmp();
-            double[][] bands = AudioEngine.getEq();
+            double[] bands = AudioEngine.getEq();
             int output = this.processSound(amplitude);
+            AudioEngine.getAnalyser().printNamedBands(AudioEngine.getBuffer());
             //.this.sendLight(output); TODO uncomment to make light
             try {
                 Thread.sleep(20);

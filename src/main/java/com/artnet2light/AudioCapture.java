@@ -13,7 +13,8 @@ public class AudioCapture {
     private final int frameSize = 2048; // FFT frame
     private final int byteDepth = 2; // 16-bit
     private final int channelCount = 1;
-    private double[][] eqOut;
+    private double[] eqOut;
+    private byte[] byteBuffer = new byte[1024];
 
     public AudioCapture() {
         analyzer = new EightBandEQAnalyzer(sampleRate, frameSize);
@@ -31,7 +32,6 @@ public class AudioCapture {
             return;
         }
 
-        byte[] byteBuffer = new byte[1024];
         List<Float> sampleBuffer = new ArrayList<>();
 
         while (true) {
@@ -50,10 +50,7 @@ public class AudioCapture {
                 }
 
                 // Run EQ
-                eqOut = analyzer.analyze(frame);
-
-                // Example: print first band
-                System.out.printf("EQ Band 0 Level: %.2f\n", eqOut[0][0]);
+                eqOut = analyzer.analyze(byteBuffer);
 
                 // Remove used samples
                 sampleBuffer.subList(0, frameSize).clear();
@@ -74,8 +71,17 @@ public class AudioCapture {
         return this.amplitude;
     }
 
-    public double[][] getEq() {
+    public double[]getEq() {
         return this.eqOut;
+    }
+
+    public EightBandEQAnalyzer getAnalyser()
+    {
+        return this.analyzer;
+    }
+
+    public byte[] getBuffer() {
+        return this.byteBuffer;
     }
 
     private double calculateAmplitude(byte[] buffer, int bytesRead) {
