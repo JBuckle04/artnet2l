@@ -4,6 +4,7 @@ package com.artnet2light;
 public class Engine {
     ArtNetSender ArtnetHandler; // Use broadcast or specific IP
     AudioCapture AudioEngine;
+    EightBandEQAnalyzer eq;
 
     Gain myGain = new Gain(0.00001);
     Smoother mySmoother = new Smoother(0.1,0.1);
@@ -17,6 +18,7 @@ public class Engine {
     public void start() throws Exception{
         ArtnetHandler = new ArtNetSender(); // Use broadcast or specific IP
         AudioEngine = new AudioCapture();
+        eq = new EightBandEQAnalyzer(44100, 2048);
 
         new Thread(() -> AudioEngine.start()).start();
         new Thread(() -> coordinate()).start();        
@@ -28,8 +30,9 @@ public class Engine {
 
         while (true) {
             double amplitude = AudioEngine.getAmp();
+            double[][] bands = AudioEngine.getEq();
             int output = this.processSound(amplitude);
-            this.sendLight(output);
+            //.this.sendLight(output); TODO uncomment to make light
             try {
                 Thread.sleep(20);
             } catch (InterruptedException e) {

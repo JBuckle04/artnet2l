@@ -20,6 +20,13 @@
 
   <dependencies>
 
+<dependency>
+  <groupId>com.github.wendykierp</groupId>
+  <artifactId>JTransforms</artifactId>
+  <version>3.1</version>
+</dependency>
+
+
     <dependency>
       <groupId>ch.bildspur</groupId>
       <artifactId>artnet4j</artifactId>
